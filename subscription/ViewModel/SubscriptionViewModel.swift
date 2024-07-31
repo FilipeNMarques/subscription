@@ -49,10 +49,9 @@ class SubscriptionViewModel {
     }
 
     func fetchSubscriptionData() async {
-        Task(priority: .background) {
             do {
                 let payload = try await NetworkManager.shared.fetch()
-                updateCoreData(with: payload)
+                await updateCoreData(with: payload)
                 subscription = self.convertPayloadToSubscription(payload)
 
                 DispatchQueue.main.async {
@@ -61,12 +60,12 @@ class SubscriptionViewModel {
             } catch {
                 print("error")
             }
-        }
     }
 
-    func updateCoreData(with payload: SubscriptionPayload) {
-        _ = convertPayloadToSubscription(payload)
-        coreDataManager.saveContext()
+    func updateCoreData(with payload: SubscriptionPayload) async {
+        let subscriptionModel = convertPayloadToSubscription(payload)
+
+        coreDataManager.saveSubscription(subscription: subscriptionModel)
     }
 
     func convertPayloadToSubscription(_ payload: SubscriptionPayload) -> SubscriptionModel {

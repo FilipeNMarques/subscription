@@ -30,9 +30,9 @@ class SubscriptionViewController: UIViewController, SubscriptionViewModelDelegat
         subscriptionView.benefitsButton.addTarget(self, action: #selector(toggleBenefits), for: .touchUpInside)
         subscriptionView.subscribeButton.addTarget(self, action: #selector(subscribeButtonTapped), for: .touchUpInside)
 
-        Task(priority: .background) {
+        Task(priority: .background, operation: {
             await viewModel.checkForUpdates()
-        }
+        }) 
     }
 
     func didUpdateSubscription() {
